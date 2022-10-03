@@ -4,7 +4,36 @@ from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 from core import models
 from django.views.generic import TemplateView, ListView
+from core import filters
+from core import serializers
+from rest_framework import status
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
+class TagViewSet(ReadOnlyModelViewSet):
+    queryset = models.Tag.objects.all()
+    serializer_class = serializers.Tag
+    filterset_class = filters.Tag
+
+class ItemViewSet(ReadOnlyModelViewSet):
+    queryset = models.Item.objects.all()
+    serializer_class = serializers.Item
+    filterset_class = filters.Item
+
+# class Tags(ListAPIView):
+#     queryset = models.Tag.objects.all()
+#     serializer_class = serializers.Tag
+#     filterset_class = filters.Tag
+#
+#     def list(self, request, *args, **kwargs):
+#         serializer = serializers.TagSearch(data=request.query_params)
+#         serializer.is_valid(raise_exception=True)
+#
+#         return super().list(request, *args, **kwargs)
+#
+# class Tag(RetrieveAPIView):
+#     queryset = models.Tag.objects.all()
+#     serializer_class = serializers.Tag
 
 class Index(TemplateView):
     template_name = 'core/index.html'
@@ -42,3 +71,11 @@ def person(request, id):
             'phone': p.phone,
         }
     return JsonResponse(detail)
+
+# def tags(request):
+#     search_serializer = serializers.TagSearch(data=request.GET)
+#     if not search_serializer.is_valid():
+#         return JsonResponse(search_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     f = filters.Tag(request.GET, queryset=models.Tag.objects.all())
+#     serializer = serializers.Tag(instance=f.qs, many=True)
+#     return JsonResponse({'result': serializer.data})

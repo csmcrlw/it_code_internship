@@ -1,2 +1,6 @@
 Django == 4.1.1
 ipython
+
+django_filter == 22.1
+djangorestframework == 3.13.1
+django-rest-swagger == 2.2.0
